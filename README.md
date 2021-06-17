@@ -4,8 +4,8 @@ Un pequeño proyecto que te permite trabajar con laravel y vuetify ya integrados
 
 ### Video de como funciona
 
-[Demo](https://youtu.be/-AnDxPlxjjE)
-[Demo si quieres colaborar](http://fumacrom.com/slOk)
+- [Demo](https://youtu.be/-AnDxPlxjjE)
+- [Demo Adfly](http://fumacrom.com/slOk)
 
 ### instalación
 
