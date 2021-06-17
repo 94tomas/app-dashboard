@@ -21,64 +21,38 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <v-app>
+            <v-app-bar app>
+                <v-toolbar-title>
+                    <a href="/" style="text-decoration: none;" class="primary--text">
+                        Dashboard vuetify
+                    </a>
+                </v-toolbar-title>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                <v-spacer></v-spacer>
 
-                    </ul>
+                <!-- Authentication Links -->
+                @guest
+                @if (!\Request::is('passwordapi/*') && !\Request::is('success'))
+                    <v-btn href="{{ route('login') }}" color="primary" text class="mr-0">
+                        Iniciar sesión<v-icon>mdi-login</v-icon>
+                    </v-btn>
+                @endif
+                @else
+                    <v-btn href="{{ route('dashboard') }}" color="primary" text class="mr-0">
+                        Dashboard<v-icon>mdi-view-dashboard</v-icon>
+                    </v-btn>
+                @endguest
+            </v-app-bar>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+            <v-main>
+                @yield('content')
+            </v-main>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/dashboard">
-                                        Dashboard
-                                    </a>
-
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+            {{-- <v-footer app>
+                <!-- -->
+            </v-footer> --}}
+        </v-app>
     </div>
 </body>
 </html>

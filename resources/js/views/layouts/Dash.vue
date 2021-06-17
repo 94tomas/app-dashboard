@@ -7,7 +7,8 @@
             :permanent="($vuetify.breakpoint.mdAndUp) ? perDrawer : false"
             color="secondary"
         >
-            <!-- :permanent="$vuetify.breakpoint.mdAndUp" -->
+
+            <!-- main list -->
             <v-list class="pt-0" dense>
                 <v-img
                     src="/images/bg-common.jpg"
@@ -19,8 +20,9 @@
                         <v-list-item>
                             <v-list-item-avatar>
                                 <img
-                                    src="/images/user.png"
+                                    src="/images/user.jpg"
                                     alt="admin"
+                                    style="object-fit:cover; object-position:center;"
                                 >
                             </v-list-item-avatar>
                             <v-list-item-content>
@@ -30,58 +32,68 @@
                         </v-list-item>
                     </v-list>
                 </v-img>
-                <v-list-item>
-                    <v-list-item-content>
-                        <v-list-item-title>Menu de navegación</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-list-item link href="/mi-panel" :class="[(path == '/dashboard') ? 'active' : '']">
-                    <v-list-item-icon>
-                        <v-icon>mdi-view-dashboard</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Mi panel</v-list-item-title>
-                </v-list-item>
-                <!-- list menu -->
-                <v-list-group
-                    v-for="item in items"
-                    :key="item.title"
-                    v-model="item.active"
-                    :prepend-icon="item.action"
-                    no-action
-                >
-                    <template v-slot:activator>
-                    <v-list-item-content>
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                    </v-list-item-content>
-                    </template>
 
-                    <v-list-item
-                        v-for="child in item.items"
-                        :key="child.title"
-                        link
-                        :href="child.url"
-                        :class="[(path == child.url) ? 'active' : '']"
-                    >
+                <!-- main menu -->
+                <template v-for="(item, index) in items">
+
+                    <v-list-item :key="index" v-if="item.header">
                         <v-list-item-content>
-                            <v-list-item-title v-text="child.title"></v-list-item-title>
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                </v-list-group>
-                <!-- end list menu -->
-                <!-- <v-list-item link href="/mi-cuenta" :class="[(path == '/mi-cuenta') ? 'active' : '']">
-                    <v-list-item-action>
-                        <v-icon>mdi-account-circle</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Mi cuenta</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item> -->
+
+                    <v-list-item
+                        :key="index"
+                        link
+                        :href="item.path"
+                        :class="[(path == item.path) ? 'active' : '']"
+                        v-if="!item.header && !item.subItems"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>mdi-{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item>
+
+                    <v-list-group
+                        :key="index"
+                        v-model="item.active"
+                        :prepend-icon="`mdi-${item.icon}`"
+                        no-action
+                        v-if="!item.header && item.subItems"
+                    >
+                        <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                        </v-list-item-content>
+                        </template>
+
+                        <v-list-item
+                            v-for="child in item.subItems"
+                            :key="child.title"
+                            link
+                            :href="child.path"
+                            :class="[(path == child.path) ? 'active' : '']"
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title v-text="child.title"></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-group>
+
+                </template>
+                <!-- end main menu -->
+
             </v-list>
+            <!-- end main list -->
+
         </v-navigation-drawer>
 
+        <!-- main appbar -->
         <v-app-bar
             app
         >
+            <!-- btn drawer -->
             <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-show="!$vuetify.breakpoint.mdAndUp"></v-app-bar-nav-icon>
             <v-btn
                 class="mr-0"
@@ -94,9 +106,43 @@
             </v-btn>
             <v-spacer></v-spacer>
 
-            <!-- <v-btn icon>
-                <v-icon>mdi-bell</v-icon>
-            </v-btn> -->
+            <!-- btns header -->
+            <!-- menu notify -->
+            <v-menu offset-y content-class="white">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                        <v-badge
+                            content="6"
+                            color="red"
+                            overlap
+                        >
+                            <v-icon>mdi-bell</v-icon>
+                        </v-badge>
+                    </v-btn>
+                </template>
+                <v-list dense min-width="300px" max-width="300px" max-height="200px">
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <v-icon>mdi-bell-ring</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>6 Notificaciones nuevas</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item two-line href="#" v-for="(notify, i) in 6" :key="i">
+                        <v-list-item-content>
+                            <v-list-item-title>Lorem ipsum dolor</v-list-item-title>
+                            <v-list-item-subtitle>Lorem ipsum dolor sit amet consectetur adipisicing elit.</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <!-- end menu notify -->
+
             <!-- menu account -->
             <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -105,15 +151,23 @@
                         v-bind="attrs"
                         v-on="on"
                         class="mr-0"
-                        color="primary"
                     >
                         <v-icon>mdi-account-circle</v-icon>
                     </v-btn>
                 </template>
-                <v-list dense min-width="200px">
-                    <v-list-item href="/mi-panel">
-                        <v-icon>mdi-view-dashboard</v-icon>
-                        <v-list-item-title>Mi panel</v-list-item-title>
+                <v-list dense min-width="250px" max-height="250px">
+                    <v-list-item>
+                        <v-list-item-avatar>
+                            <img
+                                src="/images/user.jpg"
+                                alt="admin"
+                                style="object-fit:cover; object-position:center;"
+                            >
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>{{ userName }}</v-list-item-title>
+                            <v-list-item-subtitle>Administrador</v-list-item-subtitle>
+                        </v-list-item-content>
                     </v-list-item>
                     <v-list-item href="/mi-cuenta">
                         <v-icon>mdi-account-edit</v-icon>
@@ -126,7 +180,10 @@
                     </v-list-item>
                 </v-list>
             </v-menu>
+            <!-- end menu account -->
+
         </v-app-bar>
+        <!-- end main appbar -->
 
         <v-main class="grey lighten-3">
             <slot/>
@@ -138,6 +195,15 @@
         >
             <span>Edson Tomas &copy; {{ new Date().getFullYear() }}</span>
         </v-footer>
+
+        <!-- overlay -->
+        <v-overlay :value="overlay" opacity=".9" z-index="10">
+            <v-progress-circular
+                indeterminate
+                size="64"
+                color="primary"
+            ></v-progress-circular>
+        </v-overlay>
     </v-app>
 </template>
 
@@ -145,99 +211,64 @@
 export default {
     data() {
         return {
-            overlay: false,
+            overlay: true,
             perDrawer: true,
             drawer: null,
             path: '/',
             items: [
                 {
-                    icon: 'mdi-view-dashboard',
-                    title: 'Mi panel',
-                    subItems: []
+                    header: true,
+                    title: 'Menú de navegación'
                 },
                 {
-                    icon: 'mdi-briefcase',
-                    title: 'Administración',
+                    header: false,
+                    icon: 'view-dashboard',
+                    title: 'Mi panel',
+                    path: '/dashboard'
+                },
+                {
+                    header: false,
+                    icon: 'alert',
+                    title: 'Alertas',
+                    path: '/alertas'
+                },
+                {
+                    header: false,
+                    icon: 'card',
+                    title: 'Botones',
+                    path: '/botones'
+                },
+                {
+                    header: false,
+                    icon: 'form-select',
+                    title: 'Formularios',
                     subItems: [
-                        { title: 'Tiendas (sucursales)', link: '/tiendas' },
-                        { title: 'Cajas', link: '/cajas' },
-                    ]
-                }
-                // {
-                //     action: 'mdi-briefcase',
-                //     items: [
-                //         { title: 'Tiendas (sucursales)', url: '/tiendas' },
-                //         { title: 'Cajas', url: '/cajas' },
-                //         { title: 'Proveedores', url: '/proveedores' },
-                //         { title: 'Empleados', url: '/empleados' },
-                //         { title: 'Clientes', url: '/clientes' },
-                //     ],
-                //     title: 'Administración',
-                // },
-                // {
-                //     action: 'mdi-store',
-                //     items: [
-                //         { title: 'Categorías', url: '/categorias' },
-                //         { title: 'Presentaciones', url: '/presentaciones' },
-                //         { title: 'Marcas', url: '/marcas' },
-                //         { title: 'Productos', url: '/productos' },
-                //     ],
-                //     title: 'Almacén',
-                // },
-                // {
-                //     action: 'mdi-cart',
-                //     items: [
-                //         { title: 'Nueva compra', url: '/compras' },
-                //         { title: 'Compras realizadas', url: '/lista-compras' },
-                //     ],
-                //     title: 'Compras',
-                // },
-                // {
-                //     action: 'mdi-cash',
-                //     items: [
-                //         { title: 'Realizar venta', url: '/ventas' },
-                //         { title: 'ventas realizadas', url: '/lista-ventas' },
-                //     ],
-                //     title: 'Ventas',
-                // },
-                // {
-                //     action: 'mdi-point-of-sale',
-                //     items: [
-                //         { title: 'Generar cotización', url: '/cotizacion' },
-                //         { title: 'Ver cotizaciones', url: '/lista-cotizacion' },
-                //     ],
-                //     title: 'Cotizaciones',
-                // },
-                // {
-                //     action: 'mdi-printer-pos',
-                //     items: [
-                //         { title: 'Nuevo movimiento', url: '/movimiento-caja' },
-                //         { title: 'Movimientos realizadas', url: '/lista-movimientos' },
-                //     ],
-                //     title: 'Movimientos en cajas',
-                // },
-                // {
-                //     action: 'mdi-warehouse',
-                //     items: [
-                //         { title: 'Inventario general', url: '/kardex' }
-                //     ],
-                //     title: 'Inventario',
-                // },
-                // {
-                //     action: 'mdi-chart-bar',
-                //     items: [
-                //         { title: 'Reportes de ventas', url: '/reporte-ventas' }
-                //     ],
-                //     title: 'Reportes',
-                // },
-                // {
-                //     action: 'mdi-cog',
-                //     items: [
-                //         { title: 'Datos de la empresa', url: '/mi-empresa' },
-                //         { title: 'Mi cuenta', url: '/mi-cuenta' },
-                //     ],
-                //     title: 'Configuraciones',
-                // },
+                        { title: 'Campos de texto', path: '/campos-de-texto' },
+                        { title: 'TextArea', path: '/textarea' },
+                    ],
+                },
+                {
+                    header: false,
+                    icon: 'image',
+                    title: 'Parallax',
+                    path: '/parallax'
+                },
+                {
+                    header: true,
+                    title: 'Menú de Configuración'
+                },
+                {
+                    header: false,
+                    icon: 'cog',
+                    title: 'Configuración',
+                    path: '/configuracion'
+                },
+                {
+                    header: false,
+                    icon: 'account-edit',
+                    title: 'Mi cuenta',
+                    path: '/mi-cuenta'
+                },
             ],
         }
     },
@@ -246,13 +277,20 @@ export default {
         this.path = window.location.pathname;
         this.findActivePath()
     },
+    mounted() {
+        setTimeout(() => {
+            this.overlay = false
+        }, 800);
+    },
     methods: {
         findActivePath () {
             this.items.forEach(element => {
-                for (let i = 0; i < element.items.length; i++) {
-                    if (element.items[i].url === this.path) {
-                        element.active = true
-                        break
+                if (!element.header && element.subItems) {
+                    for (let i = 0; i < element.subItems.length; i++) {
+                        if (element.subItems[i].path === this.path) {
+                            element.active = true
+                            break
+                        }
                     }
                 }
             });

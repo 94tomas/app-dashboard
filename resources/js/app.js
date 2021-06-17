@@ -23,7 +23,7 @@ Vue.use(Vuetify);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('floating-btn', require('./components/FloatingBtn.vue').default);
 Vue.component('app-dashboard', require('./views/layouts/Dash.vue').default);
 
 /**
@@ -34,5 +34,9 @@ Vue.component('app-dashboard', require('./views/layouts/Dash.vue').default);
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify()
+    vuetify: new Vuetify(),
+    mounted() {
+        this.$vuetify.theme.themes.light.primary = '#0097A7'
+        this.$vuetify.theme.themes.light.secondary = '#263238'
+    },
 });
