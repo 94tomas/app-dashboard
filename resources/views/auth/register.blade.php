@@ -32,7 +32,6 @@
                         name="name"
                         value="{{ old('name') }}"
                         autofocus
-                        color="primary"
                         :error="@error('name') true @else false @enderror"
                         error-messages="@error('name') {{ $message }} @enderror"
                     ></v-text-field>
@@ -42,7 +41,6 @@
                         type="email"
                         name="email"
                         value="{{ old('email') }}"
-                        color="primary"
                         :error="@error('email') true @else false @enderror"
                         error-messages="@error('email') {{ $message }} @enderror"
                     ></v-text-field>
@@ -51,7 +49,6 @@
                         prepend-icon="mdi-lock"
                         type="password"
                         name="password"
-                        color="secondary"
                         :error="@error('password') true @else false @enderror"
                         error-messages="@error('password') {{ $message }} @enderror"
                     ></v-text-field>
@@ -60,7 +57,6 @@
                         prepend-icon="mdi-lock-check"
                         type="password"
                         name="password_confirmation"
-                        color="secondary"
                         autocomplete="new-password"
                     ></v-text-field>
                 </v-card-text>

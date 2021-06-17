@@ -42,7 +42,6 @@
                         name="email"
                         value="{{ old('email') }}"
                         autofocus
-                        color="primary"
                         :error="@error('email') true @else false @enderror"
                         error-messages="@error('email') {{ $message }} @enderror"
                     ></v-text-field>
@@ -51,7 +50,6 @@
                         prepend-icon="mdi-lock"
                         type="password"
                         name="password"
-                        color="secondary"
                         :error="@error('password') true @else false @enderror"
                         error-messages="@error('password') {{ $message }} @enderror"
                     ></v-text-field>

@@ -42,7 +42,6 @@
                         name="email"
                         value="{{ old('email') }}"
                         autofocus
-                        color="primary"
                         :error="@error('email') true @else false @enderror"
                         error-messages="@error('email') {{ $message }} @enderror"
                     ></v-text-field>
